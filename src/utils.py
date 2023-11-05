@@ -4,15 +4,15 @@ from sklearn.pipeline import Pipeline
 from joblib import dump, load
 import pandas as pd
 import seaborn as sns
-from matplotlib import pyplot as plt 
+from matplotlib import pyplot as plt
 
 def update_model(model: Pipeline) -> None:
     dump(model, 'model/model.pkl')
 
-def save_model(model, path="./model.pkl") -> None:
+def save_model(model, path="model/model.pkl") -> None:
     dump(model, path)
 
-def load_model(model, path="./model.pkl") -> None:
+def load_model(model, path="model/model.pkl") -> None:
     load(model, path)
 
 def save_simple_metrics_report(train_score: float, test_score: float, validation_score: float, model: Pipeline) -> None:

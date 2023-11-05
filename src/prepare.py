@@ -1,12 +1,8 @@
-# TODO: refactor this file to adapt it for this project
-
-from dvc import api
 import pandas as pd
-from io import StringIO
+
 import sys
 import logging
 
-from pandas.core.tools import numeric
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)s:%(name)s: %(message)s',
@@ -19,25 +15,17 @@ logger = logging.getLogger(__name__)
 
 logging.info('Fetching data...')
 
-movie_data_path = api.read('dataset/movies.csv', remote='dataset-track')
-finantial_data_path = api.read('dataset/finantials.csv', remote='dataset-track')
-opening_data_path = api.read('dataset/opening_gross.csv', remote='dataset-track')
 
-fin_data = pd.read_csv(StringIO(finantial_data_path))
-movie_data = pd.read_csv(StringIO(movie_data_path))
-opening_data = pd.read_csv(StringIO(opening_data_path))
+fake_news_dataset = pd.read_csv("../data/fake_news.csv")
+esp_fake_news = pd.read_csv("../data/fakes1000.csv")
 
-numeric_columns_mask = (movie_data.dtypes == float) | (movie_data.dtypes == int)
-numeric_columns = [column for column in numeric_columns_mask.index if numeric_columns_mask[column]]
-movie_data = movie_data[numeric_columns+['movie_title']]
+df1 = fake_news_dataset[["texto", "fake_news"]].rename(columns={"texto":"Text","fake_news":"label"})
+df2 = esp_fake_news.rename(columns={"class":"label"})
 
-fin_data = fin_data[['movie_title', 'production_budget', 'worldwide_gross']]
+full_data = pd.concat([df1, df2])
+full_data['label'] = full_data['label'].apply(lambda x: "FAKE" if x is False else "REAL")
 
-fin_movie_data = pd.merge(fin_data, movie_data, on='movie_title', how='left')
-full_movie_data = pd.merge(opening_data, fin_movie_data, on='movie_title', how='left')
+full_data.to_csv("./full_data.csv")
 
-full_movie_data = full_movie_data.drop(['gross','movie_title'], axis=1)
-
-full_movie_data.to_csv('dataset/full_data.csv',index=False)
 
 logger.info('Data Fetched and prepared...')
