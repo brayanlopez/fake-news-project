@@ -1,0 +1,10 @@
+venv/
+-ipynb_checkpoints/
+*.json
+report.txt
+*.png
+__pycache__/
+
+# TODO: check ignore for csv and pkl extensions when implement a MLOps pipeline
+# *.csv
+# *.pkl
