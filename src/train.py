@@ -7,7 +7,7 @@ import sys
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV
+from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV, cross_val_score
 from sklearn.pipeline import Pipeline
 
 # from sklearn.impute import SimpleImputer
@@ -30,7 +30,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 logger.info('Loading Data...')
-data = pd.read_csv('data/full_data.csv')
+data = pd.read_csv('../data/full_data.csv')
 
 logger.info('Loading model pipeline...')
 clf = Pipeline([
@@ -39,7 +39,8 @@ clf = Pipeline([
 ])
 
 logger.info('Seraparating dataset into train and test')
-X_train, X_test, y_train, y_test = train_test_split(full_data["Text"], full_data.label, test_size=0.33, random_state=53)
+X_train, X_test, y_train, y_test = train_test_split(
+    data["Text"], data.label, test_size=0.33, random_state=53)
 
 
 logger.info('Setting Hyperparameter to tune')
@@ -53,7 +54,8 @@ best_model = grid_search.best_estimator_
 
 
 logger.info('Cross validating with best model...')
-cross_val_scores = cross_val_score(best_model, X_train, y_train, cv=5, scoring='accuracy')
+cross_val_scores = cross_val_score(
+    best_model, X_train, y_train, cv=5, scoring='accuracy')
 
 test_score = np.mean(cross_val_scores)
 

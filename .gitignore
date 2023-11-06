@@ -1,4 +1,18 @@
+# Virtual environment
 venv/
+env/
+*.pyc
+*.pyo
+__pycache__/
+*.egg-info/
+dist/
+build/
+.idea/
+.vscode/
+*.db
+*.sqlite3
+*.log
+
 -ipynb_checkpoints/
 *.json
 report.txt
